@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/niljimeno/jamping/player"
+	"github.com/niljimeno/jampie/player"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -15,7 +15,7 @@ func (g *Game) init() {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return 100, 100
+	return 120, 120
 }
 
 func (g *Game) Update() error {

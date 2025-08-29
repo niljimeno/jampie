@@ -1,8 +1,10 @@
-module github.com/niljimeno/jamping
+module github.com/niljimeno/jampie
 
-go 1.24.4
+go 1.24.6
 
-require github.com/hajimehoshi/ebiten/v2 v2.8.8
+require (
+	github.com/hajimehoshi/ebiten/v2 v2.8.8
+)
 
 require (
 	github.com/ebitengine/gomobile v0.0.0-20240911145611-4856209ac325 // indirect
