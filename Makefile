@@ -5,6 +5,7 @@ wasm:
 	cp $$(go env GOROOT)/lib/wasm/wasm_exec.js .
 
 	cp scripts/index.html target/web/
+	cp -r assets target/web/
 
 run-wasm:
 	cd target/web;\
