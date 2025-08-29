@@ -9,20 +9,21 @@ import (
 )
 
 type Player struct {
-	Image    *ebiten.Image
-	Position vector.Vector
-	Velocity vector.Vector
-	CanJump  bool
+	Image      *ebiten.Image
+	Position   vector.Vector
+	Velocity   vector.Vector
+	CanJump    bool
+	IsOnGround bool
 }
 
 func (p *Player) Update() {
 	var movement float64 = 0
 	jumpPressed := false
 	if controls.IsKeyPressed("right") {
-		movement += 1
+		movement += 0.01
 	}
 	if controls.IsKeyPressed("left") {
-		movement -= 1
+		movement -= 0.01
 	}
 	if controls.IsKeyPressed("jump") {
 		jumpPressed = true
@@ -32,9 +33,15 @@ func (p *Player) Update() {
 
 	p.Velocity.X += movement
 	p.Position.X += p.Velocity.X
-	p.Velocity.Y -= 0
 
 	p.Position = vector.Add(p.Position, p.Velocity)
+
+	if p.Position.Y <= 69 {
+		p.Velocity.Y += 0.02
+	} else {
+		p.Velocity.Y = 0
+	}
+
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
