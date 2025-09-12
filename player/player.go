@@ -5,6 +5,8 @@ import (
 
 	"github.com/niljimeno/jampie/utils/controls"
 	"github.com/niljimeno/jampie/utils/vector"
+	"github.com/niljimeno/jampie/world"
+	"github.com/niljimeno/jampie/world/camera"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -14,6 +16,7 @@ type Player struct {
 	Image           *ebiten.Image
 	Position        vector.Vector
 	Velocity        vector.Vector
+	Size            vector.Vector
 	CanJump         bool
 	JumpJustPressed bool
 	IsOnGround      bool
@@ -76,6 +79,12 @@ func (p *Player) Update() {
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
+	world.Camera.Draw(camera.DrawOptions{
+		Position: p.Position,
+		Size:     p.Size,
+		Image:    *p.Image,
+	})
+
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(p.Position.X, p.Position.Y)
 	screen.DrawImage(p.Image, op)

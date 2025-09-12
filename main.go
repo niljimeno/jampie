@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/niljimeno/jampie/player"
+	"github.com/niljimeno/jampie/world"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -31,6 +32,8 @@ func main() {
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	ebiten.SetWindowSize(800, 800)
 	ebiten.SetWindowTitle("Attempt")
+
+	world.NewWorld()
 
 	bat, _ = player.NewPlayer()
 
