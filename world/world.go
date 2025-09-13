@@ -12,7 +12,7 @@ var Camera camera.Camera
 
 func NewWorld() {
 	Camera = camera.Camera{
-		SpeedReduction: 8,
+		SpeedReduction: 16,
 		Margin:         1,
 	}
 }

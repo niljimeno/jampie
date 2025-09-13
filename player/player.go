@@ -48,6 +48,7 @@ func (p *Player) Update() {
 	p.HandlePhysics()
 
 	p.Position = vector.Add(p.Position, p.Velocity)
+	world.Camera.MoveY(p.Position.Y)
 }
 
 func (p *Player) HandlePhysics() {
@@ -127,11 +128,15 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		Position: p.Position,
 		Size:     p.Size,
 		Image:    p.Image,
+		Screen:   screen,
 	})
 
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(p.Position.X, p.Position.Y)
-	screen.DrawImage(p.Image, op)
+	world.Camera.Draw(camera.DrawOptions{
+		Position: vector.Vector{0, 0},
+		Size:     p.Size,
+		Image:    p.Image,
+		Screen:   screen,
+	})
 }
 
 func NewPlayer() (Player, error) {
