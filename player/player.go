@@ -113,6 +113,7 @@ func (p *Player) HandleInput() {
 	}
 }
 
+
 func (p *Player) SetProperties(gravity float64, speed float64) {
 	p.Properties.BASE_GRAVITY = gravity
 	p.Properties.BASE_SPEED = speed
@@ -130,9 +131,9 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		Image:    p.Image,
 		Screen:   screen,
 	})
-
+  
 	world.Camera.Draw(camera.DrawOptions{
-		Position: vector.Vector{0, 0},
+		Position: vector.Vector{X: 0, Y: 0},
 		Size:     p.Size,
 		Image:    p.Image,
 		Screen:   screen,
@@ -148,6 +149,7 @@ func NewPlayer() (Player, error) {
 	return Player{
 		Image:      img,
 		Position:   vector.Vector{X: 0, Y: 0},
+		Size:       vector.Vector{X: 16, Y: 16},
 		IsOnGround: false,
 		Ready:      false,
 	}, nil
