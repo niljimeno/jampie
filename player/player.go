@@ -76,18 +76,23 @@ func (p *Player) Update() {
 	}
 
 	p.Position = vector.Add(p.Position, p.Velocity)
+	world.Camera.MoveY(p.Position.Y)
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
 	world.Camera.Draw(camera.DrawOptions{
 		Position: p.Position,
 		Size:     p.Size,
-		Image:    *p.Image,
+		Image:    p.Image,
+		Screen:   screen,
+	})
+	world.Camera.Draw(camera.DrawOptions{
+		Position: vector.Vector{X: 0, Y: 0},
+		Size:     p.Size,
+		Image:    p.Image,
+		Screen:   screen,
 	})
 
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(p.Position.X, p.Position.Y)
-	screen.DrawImage(p.Image, op)
 }
 
 func NewPlayer() (Player, error) {
@@ -99,6 +104,7 @@ func NewPlayer() (Player, error) {
 	return Player{
 		Image:      img,
 		Position:   vector.Vector{X: 0, Y: 0},
+		Size:       vector.Vector{X: 16, Y: 16},
 		IsOnGround: false,
 	}, nil
 }
