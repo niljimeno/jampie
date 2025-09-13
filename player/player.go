@@ -126,7 +126,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	world.Camera.Draw(camera.DrawOptions{
 		Position: p.Position,
 		Size:     p.Size,
-		Image:    *p.Image,
+		Image:    p.Image,
 	})
 
 	op := &ebiten.DrawImageOptions{}

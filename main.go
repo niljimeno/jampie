@@ -21,6 +21,8 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 
 func (g *Game) Update() error {
 	bat.Update()
+	world.Camera.Update()
+
 	return nil
 }
 
