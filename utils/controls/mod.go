@@ -2,6 +2,12 @@ package controls
 
 import "github.com/hajimehoshi/ebiten/v2"
 
+
+
+func Update()  {
+	
+}
+
 func IsKeyPressed(key string) bool {
 	switch key {
 	default:

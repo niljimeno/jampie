@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/niljimeno/jampie/utils/controls"
+	"github.com/niljimeno/jampie/utils/imath"
 	"github.com/niljimeno/jampie/utils/vector"
 	"github.com/niljimeno/jampie/world"
 	"github.com/niljimeno/jampie/world/camera"
@@ -13,70 +14,114 @@ import (
 )
 
 type Player struct {
-	Image           *ebiten.Image
-	Position        vector.Vector
-	Velocity        vector.Vector
-	Size            vector.Vector
-	CanJump         bool
+	Image      *ebiten.Image
+	Position   vector.Vector
+	Velocity   vector.Vector
+	Size       vector.Vector
+	CanJump    bool
+	IsOnGround bool
+
+	Ready      bool
+	Input      PlayerInput
+	Properties PlayerProperties
+}
+
+type PlayerInput struct {
+	Move            int
+	Jump            bool
 	JumpJustPressed bool
-	IsOnGround      bool
+}
+
+type PlayerProperties struct {
+	BASE_GRAVITY float64
+	BASE_SPEED   float64
+	Gravity      float64
+	Speed        float64
 }
 
 func (p *Player) Update() {
-	jumpPressed := false
-
-	var movement int = 0
-	var speed float64 = 0.05
-	var gravity float64 = 0.2
-
-	if controls.IsKeyPressed("right") {
-		movement += 1
-	}
-	if controls.IsKeyPressed("left") {
-		movement -= 1
+	if !p.Ready {
+		p.SetProperties(0.09, 0.05)
 	}
 
-	if keypressed := controls.IsKeyPressed("jump"); keypressed && p.JumpJustPressed == false {
-		jumpPressed = true
-		p.JumpJustPressed = true
-	} else {
-		p.JumpJustPressed = keypressed
-	}
-
-	if movement != 0 {
-		p.Velocity.X += speed * float64(movement)
-	}
-
-	if p.IsOnGround {
-		if (movement == 0) || ((movement > 0) != (p.Velocity.X > 0)) {
-			switch {
-			case p.Velocity.X < 0:
-				p.Velocity.X += speed
-			case p.Velocity.X > 0:
-				p.Velocity.X -= speed
-			}
-		}
-
-	} else {
-		if p.Position.Y <= 69 {
-			p.Velocity.Y += gravity
-		} else {
-			p.Velocity.Y = 0
-			p.IsOnGround = true
-		}
-	}
-
-	if movement == 0 && math.Abs(p.Velocity.X) < 0.2 {
-		p.Velocity.X = 0
-	}
-
-	if jumpPressed {
-		p.Velocity.Y = -2.69
-		p.IsOnGround = false
-	}
+	p.HandleInput()
+	p.HandlePhysics()
 
 	p.Position = vector.Add(p.Position, p.Velocity)
 	world.Camera.MoveY(p.Position.Y)
+}
+
+func (p *Player) HandlePhysics() {
+	if p.IsOnGround {
+		p.GroundPhysics()
+	} else {
+		p.AirPhysics()
+	}
+
+	switch {
+	case p.Input.Move != 0:
+		var movement = p.Velocity.X + (p.Properties.Speed * float64(p.Input.Move))
+		p.Velocity.X = imath.Clamp(movement, -1.69, 1.69)
+
+	case p.Input.Move == 0 && math.Abs(p.Velocity.X) < 0.25:
+		p.Velocity.X = 0
+	}
+
+	if p.Input.Jump {
+		p.Velocity.Y = -2.0
+		p.IsOnGround = false
+	}
+}
+
+func (p *Player) GroundPhysics() {
+	if (p.Input.Move == 0) || ((p.Input.Move > 0) != (p.Velocity.X > 0)) {
+		switch {
+		case p.Velocity.X < 0:
+			p.Velocity.X += p.Properties.Speed * 2
+		case p.Velocity.X > 0:
+			p.Velocity.X -= p.Properties.Speed * 2
+		}
+	}
+}
+
+func (p *Player) AirPhysics() {
+	if p.Position.Y <= 100 {
+		p.Velocity.Y += p.Properties.Gravity
+	} else {
+		p.Velocity.Y = 0
+		p.Position.Y = 100
+		p.IsOnGround = true
+	}
+}
+
+func (p *Player) HandleInput() {
+	p.Input.Jump = false
+	p.Input.Move = 0
+
+	if controls.IsKeyPressed("right") {
+		p.Input.Move = 1
+	}
+	if controls.IsKeyPressed("left") {
+		p.Input.Move = -1
+	}
+
+	if keypressed := controls.IsKeyPressed("jump"); keypressed && p.Input.JumpJustPressed == false {
+		p.Input.Jump = true
+		p.Input.JumpJustPressed = true
+	} else {
+		p.Input.JumpJustPressed = keypressed
+	}
+}
+
+
+func (p *Player) SetProperties(gravity float64, speed float64) {
+	p.Properties.BASE_GRAVITY = gravity
+	p.Properties.BASE_SPEED = speed
+
+	p.Properties.Gravity = gravity
+	p.Properties.Speed = speed
+
+	p.Ready = true
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
@@ -86,13 +131,13 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		Image:    p.Image,
 		Screen:   screen,
 	})
+  
 	world.Camera.Draw(camera.DrawOptions{
 		Position: vector.Vector{X: 0, Y: 0},
 		Size:     p.Size,
 		Image:    p.Image,
 		Screen:   screen,
 	})
-
 }
 
 func NewPlayer() (Player, error) {
@@ -106,5 +151,6 @@ func NewPlayer() (Player, error) {
 		Position:   vector.Vector{X: 0, Y: 0},
 		Size:       vector.Vector{X: 16, Y: 16},
 		IsOnGround: false,
+		Ready:      false,
 	}, nil
 }
