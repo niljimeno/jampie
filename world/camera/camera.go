@@ -30,7 +30,7 @@ func (c *Camera) Update() {
 	}
 }
 
-func (c *Camera) MoveY(newPos float64) {
+func (c *Camera) SetTargetY(newPos float64) {
 	c.TargetY = newPos
 }
 
