@@ -3,11 +3,15 @@ package main
 import (
 	"github.com/niljimeno/jampie/player"
 	"github.com/niljimeno/jampie/world"
+	"github.com/niljimeno/jampie/world/platforms"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-var bat player.Player
+var (
+	bat  player.Player
+	plat platforms.Platform
+)
 
 type Game struct {
 }
@@ -28,6 +32,7 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	bat.Draw(screen)
+	plat.Draw(screen)
 }
 
 func main() {
@@ -38,6 +43,7 @@ func main() {
 	world.NewWorld()
 
 	bat, _ = player.NewPlayer()
+	plat = platforms.NewPlatform()
 
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		panic(err)

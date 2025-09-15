@@ -130,13 +130,6 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		Image:    p.Image,
 		Screen:   screen,
 	})
-
-	world.Camera.Draw(camera.DrawOptions{
-		Position: vector.Vector{X: 0, Y: 0},
-		Size:     p.Size,
-		Image:    p.Image,
-		Screen:   screen,
-	})
 }
 
 func NewPlayer() (Player, error) {
