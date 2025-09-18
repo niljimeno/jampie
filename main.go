@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/niljimeno/jampie/player"
 	"github.com/niljimeno/jampie/scenes"
 	"github.com/niljimeno/jampie/scenes/game"
 	"github.com/niljimeno/jampie/scenes/menu"
