@@ -19,8 +19,20 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return settings.Width, settings.Height
 }
 
-func (g *Game) Update() error {
+func (g *Game) ChangeScene() {
 	g.Scene = g.NextScene
+
+	switch g.Scene {
+	case scenes.Menu:
+	case scenes.Game:
+		game.Init()
+	}
+}
+
+func (g *Game) Update() error {
+	if g.Scene != g.NextScene {
+		g.ChangeScene()
+	}
 
 	switch g.Scene {
 	case scenes.Menu:
@@ -53,6 +65,7 @@ func main() {
 
 func runGame() {
 	g := &Game{}
+
 	err := ebiten.RunGame(g)
 	if err != nil {
 		panic(err)

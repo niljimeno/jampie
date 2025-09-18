@@ -60,7 +60,7 @@ func GenerateTerrain(source string) (Terrain, error) {
 	}
 
 	terrain := [][128]byte{{}}
-	fmt.Println("les go", img.Bounds().Max.X)
+	fmt.Println("les go", img.Bounds().Max.X, img.Bounds().Max.Y)
 
 	for r := range img.Bounds().Max.Y {
 		for i := range img.Bounds().Max.X {
@@ -68,20 +68,20 @@ func GenerateTerrain(source string) (Terrain, error) {
 			y := r
 
 			imageColor := intoRGB32(img.At(x, y))
+			_ = imageColor
 
-			fmt.Println(imageColor)
-
-			switch {
-			default:
-				terrain[r][i] = 0
-			case compareColor(air, imageColor):
-				terrain[r][i] = 0
-			case compareColor(ground, imageColor):
-				terrain[r][i] = 1
-			}
+			// switch {
+			// default:
+			// 	terrain[r][i] = 0
+			// case compareColor(air, imageColor):
+			// 	terrain[r][i] = 0
+			// case compareColor(ground, imageColor):
+			// 	terrain[r][i] = 1
+			// }
 		}
 	}
 
+	_ = img
 	return terrain, nil
 }
 
