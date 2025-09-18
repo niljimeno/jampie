@@ -12,7 +12,7 @@ func Init() {
 	bat, _ = player.NewPlayer()
 }
 
-func Update() {
+func Update(nextScene *int) {
 	bat.Update()
 	world.Camera.Update()
 }

@@ -11,7 +11,8 @@ import (
 )
 
 type Game struct {
-	Scene int
+	Scene     int
+	NextScene int
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
@@ -19,11 +20,13 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func (g *Game) Update() error {
+	g.Scene = g.NextScene
+
 	switch g.Scene {
 	case scenes.Menu:
-		menu.Update()
+		menu.Update(&g.NextScene)
 	case scenes.Game:
-		game.Update()
+		game.Update(&g.NextScene)
 	}
 
 	return nil
@@ -32,9 +35,9 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	switch g.Scene {
 	case scenes.Menu:
-		menu.Update()
+		menu.Draw(screen)
 	case scenes.Game:
-		game.Update()
+		game.Draw(screen)
 	}
 }
 
@@ -50,7 +53,6 @@ func main() {
 
 func runGame() {
 	g := &Game{}
-	g.Scene = scenes.Menu
 	err := ebiten.RunGame(g)
 	if err != nil {
 		panic(err)
