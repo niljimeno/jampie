@@ -29,11 +29,11 @@ func (c *Camera) Draw(d DrawOptions) {
 	d.Screen.DrawImage(d.Image, op)
 }
 
-func (c *Camera) Pix(screen *ebiten.Image, position vector.Vector, col color.Color) {
+func (c *Camera) Pix(screen *ebiten.Image, x, y int, col color.Color) {
 	ebitenVector.DrawFilledRect(
 		screen,
-		float32(position.X-c.Position.X+centerX),
-		float32(position.Y-c.Position.Y+centerY),
+		float32(x-int(c.Position.X)+centerX),
+		float32(y-int(c.Position.Y)+centerX),
 		1, 1,
 		col,
 		false,

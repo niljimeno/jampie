@@ -2,37 +2,41 @@ package main
 
 import (
 	"github.com/niljimeno/jampie/player"
+	"github.com/niljimeno/jampie/scenes"
+	"github.com/niljimeno/jampie/scenes/game"
+	"github.com/niljimeno/jampie/scenes/menu"
+	"github.com/niljimeno/jampie/settings"
 	"github.com/niljimeno/jampie/world"
-	"github.com/niljimeno/jampie/world/platforms"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-var (
-	bat  player.Player
-	plat platforms.Platform
-)
-
 type Game struct {
-}
-
-func (g *Game) init() {
+	Scene int
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return 120, 120
+	return settings.Width, settings.Height
 }
 
 func (g *Game) Update() error {
-	bat.Update()
-	world.Camera.Update()
+	switch g.Scene {
+	case scenes.Menu:
+		menu.Update()
+	case scenes.Game:
+		game.Update()
+	}
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	bat.Draw(screen)
-	plat.Draw(screen)
+	switch g.Scene {
+	case scenes.Menu:
+		menu.Update()
+	case scenes.Game:
+		game.Update()
+	}
 }
 
 func main() {
@@ -42,10 +46,14 @@ func main() {
 
 	world.NewWorld()
 
-	bat, _ = player.NewPlayer()
-	plat = platforms.NewPlatform()
+	runGame()
+}
 
-	if err := ebiten.RunGame(&Game{}); err != nil {
+func runGame() {
+	g := &Game{}
+	g.Scene = scenes.Menu
+	err := ebiten.RunGame(g)
+	if err != nil {
 		panic(err)
 	}
 }
