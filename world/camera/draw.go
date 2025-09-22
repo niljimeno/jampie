@@ -5,12 +5,13 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	ebitenVector "github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/niljimeno/jampie/settings"
 	"github.com/niljimeno/jampie/utils/vector"
 )
 
 const (
-	centerX = 60
-	centerY = 60
+	centerX = settings.Width / 2
+	centerY = settings.Height / 2
 )
 
 type DrawOptions struct {
